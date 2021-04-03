@@ -24,16 +24,21 @@
     </div>
   </nav>
   <div class="container-fluid">
+    <!-- search bar -->
+    <form class="form-inline" id="search-form">
+      <label class="sr-only" for="search-input">Name</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="search-input" placeholder="Keyword...">
+      <button type="submit" class="btn btn-primary mb-2">Search</button>
+    </form>
     <div class="row" id="data-panel">
       <!--  render User List  -->
       <div class="col-sm-2">
         <div class="mt-2">
           <div class="card">
-            <img src="https://randomuser.me/api/portraits/men/88.jpg" alt="avatar" class="btn avatar" data-toggle="modal"
-              data-target="#user-info-modal">
+            <img src="https://randomuser.me/api/portraits/men/88.jpg" alt="avatar" class="btn avatar"
+              data-toggle="modal" data-target="#user-info-modal">
             <div class="card-body">
-              <h2 class="h6 user-name" data-toggle="modal"
-              data-target="#user-info-modal">User Name</h2>
+              <h2 class="h6 user-name" data-toggle="modal" data-target="#user-info-modal">User Name</h2>
             </div>
           </div>
         </div>
@@ -53,7 +58,8 @@
         </div>
         <div class="modal-body" id="user-description">
           <ul class="list-group">
-            <li class="list-group-item text-center"><img src="https://randomuser.me/api/portraits/men/88.jpg" alt="avatar" id="modal-image"></li>
+            <li class="list-group-item text-center"><img src="https://randomuser.me/api/portraits/men/88.jpg"
+                alt="avatar" id="modal-image"></li>
             <li class="list-group-item" id="modal-name">NAME: </li>
             <li class="list-group-item" id="modal-surname">SURNAME: </li>
             <li class="list-group-item" id="modal-id">ID: </li>
@@ -70,7 +76,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Axios CDN-->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- JS -->

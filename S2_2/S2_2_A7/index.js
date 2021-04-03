@@ -2,6 +2,8 @@ const BASE_URL = 'https://lighthouse-user-api.herokuapp.com'
 const INDEX_URL = BASE_URL + '/api/v1/users'
 const userList = []
 const dataPanel = document.querySelector('#data-panel')
+const searchForm = document.querySelector('#search-form')
+const searchInput = document.querySelector('#search-input')
 
 // get data from api using Axios and create userList
 axios.get(INDEX_URL).then((response) => {
@@ -11,11 +13,14 @@ axios.get(INDEX_URL).then((response) => {
 })
 
 // clicking event setting
-dataPanel.addEventListener('click', function onPanelClick(event) {
-  if (event.target.matches('.avatar') || event.target.matches('.user-name')) {
-    console.log(event.target)
-    console.log(event.target.dataset.id)
+dataPanel.addEventListener('click', function onPanelClicked(event) {
+  if (event.target.matches('.avatar') || event.target.matches('.btn-more-info')) {
+    // console.log(event.target)
+    // console.log(event.target.dataset.id)
     showUserModal(Number(event.target.dataset.id))
+  } else if (event.target.matches('.btn-add-favorite')) {
+    console.log(event.target.dataset.id)
+    addToFavorite(Number(event.target.dataset.id))
   }
 })
 
@@ -30,7 +35,12 @@ function renderUserList (data) {
           data-target="#user-info-modal"  data-id="${item.id}">
         <div class="card-body">
           <h2 class="h6 user-name" data-toggle="modal"
-          data-target="#user-info-modal" data-id="${item.id}}">${item.name} ${item.surname}</h2>
+          data-target="#user-info-modal" data-id="${item.id}">${item.name} ${item.surname}</h2>
+        </div>
+        <div class="card-footer text-right">
+         <button class="btn-more-info btn btn-info" data-id="${item.id}" data-toggle="modal"
+         data-target="#user-info-modal">more</button>
+          <button class="btn-add-favorite btn btn-primary" data-id="${item.id}">+</button>
         </div>
       </div>
     </div>
@@ -51,7 +61,7 @@ function showUserModal (id) {
   const modalRegion = document.querySelector('#modal-region')
   const modalEmail = document.querySelector('#modal-email')
   axios.get(INDEX_URL + `/${id}`).then(response => {
-    console.log(response.data.id)
+    // console.log(response.data.id)
     modalImage.src = `${response.data.avatar}`
     modalName.innerText = `NAME: ${response.data.name}`
     modalSurname.innerText = `Surname: ${response.data.surname}`
@@ -62,4 +72,37 @@ function showUserModal (id) {
     modalRegion.innerText = `REGION: ${response.data.region}`
     modalEmail.innerText = `EMAIL: ${response.data.email}`
   })
+}
+
+// searchForm
+searchForm.addEventListener('submit', function onSearchFormSubmit(event){
+  event.preventDefault()
+  const keyword = searchInput.value.trim().toLowerCase()
+  let filteredUser = []
+  
+  // filter
+  filteredUser = userList.filter((user) =>
+  user.name.toLowerCase().includes(keyword) || user.surname.toLowerCase().includes(keyword))
+  // 搜尋優化
+  if (filteredUser.length === 0) {
+    return alert(`找不到符合 ${keyword} 的結果，請重新搜尋`)
+  }
+  renderUserList(filteredUser)
+})
+
+// local storage
+// localStorage.setItem('name', 'Weber')
+// localStorage.setItem('surname', 'Yang')
+// localStorage.getItem('name')
+// localStorage.removeItem('name')
+
+// function addToFavorite
+function addToFavorite (id) {
+  const list = JSON.parse(localStorage.getItem('favoriteMovies')) || []
+  const user = userList.find((user) => user.id === id)
+  if (list.some((user) => user.id === id)) {
+    return alert('電影已加入收藏清單')
+  }
+  list.push(user)
+  localStorage.setItem('favoriteMovies',JSON.stringify(list))
 }

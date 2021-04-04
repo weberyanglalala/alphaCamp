@@ -34,8 +34,7 @@ function renderUserList (data) {
         <img src="${item.avatar}" alt="avatar" class="btn avatar" data-toggle="modal"
           data-target="#user-info-modal"  data-id="${item.id}">
         <div class="card-body">
-          <h2 class="h6 user-name" data-toggle="modal"
-          data-target="#user-info-modal" data-id="${item.id}">${item.name} ${item.surname}</h2>
+          <h2 class="h6 user-name" data-id="${item.id}">${item.name} ${item.surname}</h2>
         </div>
         <div class="card-footer text-right">
          <button class="btn-more-info btn btn-info" data-id="${item.id}" data-toggle="modal"

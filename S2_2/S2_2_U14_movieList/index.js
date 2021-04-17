@@ -2,9 +2,11 @@ const BASE_URL = 'https://movie-list.alphacamp.io'
 const INDEX_URL = BASE_URL + '/api/v1/movies/'
 const POSTER_URL = BASE_URL + '/posters/'
 const movies = []
+const MOVIES_PER_PAGE = 12
 const dataPanel = document.querySelector('#data-panel')
 const searchForm = document.querySelector('#search-form')
 const searchInput = document.querySelector('#search-input')
+const paginator = document.querySelector('#paginator')
 
 // 定義函數：渲染電影清單
 // 為增加函數複用性，以新的參數 data 儲存資料，避免函數回傳值與原本設定變數 movie 耦合改變了原本 movie 的資料
@@ -75,7 +77,8 @@ function addToFavorite(id) {
 // axios
 axios.get(INDEX_URL).then((response) => {
   movies.push(...response.data.results)
-  renderMovieList(movies)
+  renderPaginator(movies.length)
+  renderMovieList(getMovieByPage(1))
 })
 
 // 搜尋功能事件
@@ -93,4 +96,30 @@ searchForm.addEventListener('submit', function onSearchFormSubmit(event) {
   renderMovieList(filteredMovies)
 })
 
-// localStorage 設定資料
+// 分頁
+// page -> 回傳該頁電影資料
+
+function getMovieByPage(page) {
+  // page 1 -> 第 0 - 11 部電影
+  const startIndex = (page - 1) * MOVIES_PER_PAGE
+  return movies.slice(startIndex, startIndex + MOVIES_PER_PAGE)
+}
+
+// render paginator 
+function renderPaginator(amount) {
+  const numberOfPages = Math.ceil(amount / MOVIES_PER_PAGE)
+  let rawHTML = ''
+  for (let page = 1; page <= numberOfPages; page++) {
+    rawHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${page}">${page}</a></li>`
+  }
+  paginator.innerHTML = rawHTML
+}
+
+// paginator
+paginator.addEventListener('click',function onPaginationClick(event) {
+  if (event.target.tagName !== 'A') return
+
+  const page = Number(event.target.dataset.page)
+
+  renderMovieList(getMovieByPage(page))
+})
